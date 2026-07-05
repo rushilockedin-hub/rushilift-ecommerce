@@ -21,30 +21,68 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const placeOrderInDB = async () => {
+    const items = cart.map((item) => ({
+      productId: item.id,
+      name: item.name,
+      image: item.image,
+      price: item.offerPrice,
+      quantity: item.quantity,
+      size: item.selectedSize || "",
+    }));
+    await API.post("/orders", {
+      items,
+      totalAmount: totalPrice,
+      address: form,
+    });
+  };
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     setPlacing(true);
     setError("");
+
     try {
-      const items = cart.map((item) => ({
-        productId: item.id,
-        name: item.name,
-        image: item.image,
-        price: item.offerPrice,
-        quantity: item.quantity,
-        size: item.selectedSize || "",
-      }));
-      await API.post("/orders", {
-        items,
-        totalAmount: totalPrice,
-        address: form,
+      const { data: razorpayOrder } = await API.post("/payment/create-order", {
+        amount: totalPrice,
       });
-      clearCart();
-      navigate("/order-success");
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "Rushilift",
+        description: "Order Payment",
+        order_id: razorpayOrder.id,
+        handler: async function () {
+          try {
+            await placeOrderInDB();
+            clearCart();
+            navigate("/order-success");
+          } catch (err) {
+            console.log("Order save error:", err.response?.data || err.message);
+            setError("Payment succeeded but order could not be saved. Contact support.");
+          }
+        },
+        prefill: {
+          name: form.fullName,
+          contact: form.phone,
+        },
+        theme: {
+          color: "#000000",
+        },
+        modal: {
+          ondismiss: function () {
+            setPlacing(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
-      console.log("Order error:", err.response?.data || err.message);
-      setError("Could not place order. Please try again.");
-    } finally {
+      console.log("Payment init error:", err.response?.data || err.message);
+      setError("Could not initiate payment. Please try again.");
       setPlacing(false);
     }
   };
@@ -86,7 +124,7 @@ const Checkout = () => {
           disabled={placing}
           style={{ width: "100%", padding: "12px", backgroundColor: "black", color: "white", fontSize: "16px", cursor: "pointer", borderRadius: "5px", marginTop: "10px" }}
         >
-          {placing ? "Placing Order..." : "Place Order"}
+          {placing ? "Processing..." : "Pay & Place Order"}
         </button>
       </form>
 
