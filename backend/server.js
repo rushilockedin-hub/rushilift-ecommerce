@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRoutes from './Routes/authRoutes.js';
 import productRoutes from './Routes/productRoutes.js';
 import orderRoutes from './Routes/orderRoutes.js';
+import paymentRoutes from './Routes/paymentRoutes.js';
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/payment', paymentRoutes);
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log('MongoDB Error', err));
