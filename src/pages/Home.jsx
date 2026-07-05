@@ -1,6 +1,6 @@
 import React from "react";
 import Hero from "../components/Hero";
-import ProductCard from "../components/Productcard";
+import ProductCard from "../components/ProductCard";
 const products = [
   { id: 1, image: "/images/Fuaark_Oversized_Tshirts_14.jpg", title: "Oversized Tee", price: "₹899", oldPrice: "₹1,299" },
   { id: 2, image: "/images/Fuaark_Club_Sringer_f2b8143b-cda0-44c9-b088-3b54313f7714.jpg", title: "Stringer Vest", price: "₹749", oldPrice: "₹1,099" },
