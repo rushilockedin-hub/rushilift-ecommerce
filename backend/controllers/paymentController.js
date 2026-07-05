@@ -8,14 +8,22 @@ export const createRazorpayOrder = async (req, res) => {
     });
 
     const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: 'Invalid amount' });
+    }
+
     const options = {
-      amount: amount * 100,
+      amount: Math.round(amount * 100),
       currency: 'INR',
       receipt: `receipt_${Date.now()}`,
     };
+
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Razorpay order error:', err);
+    const errorMessage = err.error?.description || err.message || 'Payment order creation failed';
+    res.status(500).json({ message: errorMessage });
   }
 };
