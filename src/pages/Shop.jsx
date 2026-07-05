@@ -1,6 +1,5 @@
-
 import { useNavigate } from "react-router-dom";
-import ProductCard from "../components/Productcard";
+import ProductCard from "../components/ProductCard";
 
 const products = [
   { id: "1", name: "Oversized Tee", image: "/images/Fuaark_Oversized_Tshirts_14.jpg", price: 1299, offerPrice: 899 },
