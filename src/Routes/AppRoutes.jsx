@@ -17,6 +17,7 @@ import Signup from "../pages/Signup";
 import Checkout from "../pages/Checkout";
 import About from "../pages/About";
 import OrderSuccess from "../pages/OrderSuccess";
+import OrderHistory from "../pages/OrderHistory";
 
 const AppRoutes = () => {
   return (
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/orders" element={<OrderHistory />} />
       </Routes>
       <Footer />
     </>

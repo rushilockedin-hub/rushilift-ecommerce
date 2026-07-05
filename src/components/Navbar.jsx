@@ -57,7 +57,12 @@ const Navbar = () => {
         )}
         {user ? (
           <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold">{user.name}</span>
+            <span
+              className="text-sm font-semibold cursor-pointer hover:text-red-500 transition"
+              onClick={() => navigate("/orders")}
+            >
+              {user.name}
+            </span>
             <button
               onClick={handleLogout}
               className="text-sm bg-black text-white px-3 py-1 rounded-full hover:bg-red-500 transition"
@@ -103,5 +108,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;
