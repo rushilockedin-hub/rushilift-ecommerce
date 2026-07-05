@@ -1,4 +1,5 @@
-import { FaSearch, FaUser, FaShoppingBag } from "react-icons/fa";
+import { useState } from "react";
+import { FaSearch, FaUser, FaShoppingBag, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
@@ -6,6 +7,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const { totalItems } = useCart();
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -13,8 +16,20 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const goToCategory = (category) => {
+    navigate(`/shop?category=${encodeURIComponent(category)}`);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() === "") return;
+    navigate(`/shop?search=${encodeURIComponent(searchTerm.trim())}`);
+    setShowSearch(false);
+    setSearchTerm("");
+  };
+
   return (
-    <nav className="w-full flex justify-between items-center px-6 py-4 border-b border-gray-200 shadow-sm bg-white">
+    <nav className="w-full flex justify-between items-center px-6 py-4 border-b border-gray-200 shadow-sm bg-white relative">
       <div className="flex items-center space-x-2">
         <img
           src="/images/e06a1c28-7411-4b79-bef4-0d2564224ad6.png"
@@ -24,18 +39,22 @@ const Navbar = () => {
       </div>
 
       <ul className="hidden md:flex gap-8 text-[#003049] font-semibold text-base">
-        <li className="cursor-pointer hover:text-red-500 transition">Men</li>
-        <li className="cursor-pointer hover:text-red-500 transition">Women</li>
-        <li className="cursor-pointer hover:text-red-500 transition">Compression</li>
-        <li className="cursor-pointer hover:text-red-500 flex items-center gap-1 transition">
+        <li className="cursor-pointer hover:text-red-500 transition" onClick={() => goToCategory("Men")}>Men</li>
+        <li className="cursor-pointer hover:text-red-500 transition" onClick={() => goToCategory("Women")}>Women</li>
+        <li className="cursor-pointer hover:text-red-500 transition" onClick={() => goToCategory("Compression")}>Compression</li>
+        <li className="cursor-pointer hover:text-red-500 flex items-center gap-1 transition" onClick={() => goToCategory("New Arrivals")}>
           New Arrivals <span>🔥</span>
         </li>
-        <li className="cursor-pointer hover:text-red-500 transition">Sale</li>
-        <li className="cursor-pointer hover:text-red-500 transition">Accessories</li>
+        <li className="cursor-pointer hover:text-red-500 transition" onClick={() => goToCategory("Sale")}>Sale</li>
+        <li className="cursor-pointer hover:text-red-500 transition" onClick={() => goToCategory("Accessories")}>Accessories</li>
       </ul>
 
       <div className="flex items-center gap-6 text-[#003049] text-lg">
-        <FaSearch className="cursor-pointer text-xl hover:text-red-500 transition" />
+        {showSearch ? (
+          <FaTimes className="cursor-pointer text-xl hover:text-red-500 transition" onClick={() => setShowSearch(false)} />
+        ) : (
+          <FaSearch className="cursor-pointer text-xl hover:text-red-500 transition" onClick={() => setShowSearch(true)} />
+        )}
         {user ? (
           <div className="flex items-center gap-3">
             <span className="text-sm font-semibold">{user.name}</span>
@@ -61,6 +80,26 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {showSearch && (
+        <form
+          onSubmit={handleSearchSubmit}
+          className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-md px-6 py-3 flex items-center gap-3 z-50"
+        >
+          <FaSearch className="text-gray-400" />
+          <input
+            type="text"
+            autoFocus
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 outline-none text-base"
+          />
+          <button type="submit" className="bg-black text-white px-4 py-1 rounded-full text-sm hover:bg-red-500 transition">
+            Search
+          </button>
+        </form>
+      )}
     </nav>
   );
 };
