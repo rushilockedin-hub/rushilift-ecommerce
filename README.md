@@ -1,6 +1,6 @@
 # Rushilift 🏋️‍♂️ — Premium Gymwear E-Commerce
 
-Rushilift is a full-stack e-commerce web application for premium gymwear, built with the MERN stack (MongoDB, Express, React, Node.js). It features product browsing, cart management, user authentication, and a complete checkout flow.
+Rushilift is a full-stack MERN e-commerce application built using React, Node.js, Express.js, and MongoDB. It provides a complete online shopping experience including authentication, product browsing, wishlist, cart management, checkout, and order management.
 
 **Live Demo:** [https://rushilift-ecommerce.vercel.app](https://rushilift-ecommerce.vercel.app)
 
