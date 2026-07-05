@@ -7,7 +7,10 @@ import productRoutes from './Routes/productRoutes.js';
 import orderRoutes from './Routes/orderRoutes.js';
 dotenv.config();
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://rushilift-ecommerce.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
